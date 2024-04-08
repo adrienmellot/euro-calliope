@@ -24,6 +24,7 @@ include: "./rules/demand.smk"
 include: "./rules/nuclear.smk"
 include: "./rules/transport.smk"
 include: "./rules/sync.smk"
+include: "./rules/heat.smk"
 min_version("7.8")
 localrules: all, clean
 wildcard_constraints:
@@ -154,6 +155,7 @@ rule model_template:
                 "locations.yaml",
                 "techs/demand/electricity.yaml",
                 "techs/demand/electrified-transport.yaml",
+                "techs/demand/electrified-heat.yaml",
                 "techs/storage/electricity.yaml",
                 "techs/storage/hydro.yaml",
                 "techs/supply/biofuel.yaml",
@@ -172,7 +174,9 @@ rule model_template:
         demand_timeseries_data = (
             "build/models/{resolution}/timeseries/demand/electricity.csv",
             "build/models/{resolution}/timeseries/demand/electrified-road-transport.csv",
-            "build/models/{resolution}/timeseries/demand/road-transport-historic-electrification.csv"
+            "build/models/{resolution}/timeseries/demand/road-transport-historic-electrification.csv",
+            "build/models/{resolution}/timeseries/demand/electrified-heat-demand.csv",
+            "build/models/{resolution}/timeseries/demand/heat-demand-historic-electrification.csv",
         ),
         optional_input_files = lambda wildcards: expand(
             f"build/models/{wildcards.resolution}/{{input_file}}",
@@ -199,6 +203,21 @@ rule build_metadata:
     output: "build/models/build-metadata.yaml"
     conda: "envs/default.yaml"
     script: "scripts/metadata.py"
+
+
+rule dag_dot:
+    output: temp("build/dag.dot")
+    shell:
+        "snakemake --rulegraph > {output}"
+
+
+rule dag:
+    message: "Plot dependency graph of the workflow."
+    input: rules.dag_dot.output[0]
+    # Output is deliberatly omitted so rule is executed each time.
+    conda: "envs/dag.yaml"
+    shell:
+        "dot -Tpdf {input} -o build/dag.pdf"
 
 
 rule clean: # removes all generated results

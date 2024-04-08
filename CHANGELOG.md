@@ -3,13 +3,16 @@
 ## 1.2.0 (unpublished)
 
 ### Added (models)
+* **ADD** fully-electrified heat demand (#284).
 
-* **ADD** fully-electrified road transportation (#270).
+* **ADD** fully-electrified road transportation (#270), (#271).
 
 * **ADD** nuclear power plant technology with capacity limits. Capacity limits can be equal to today or be bound by a minimum and maximum capacity to represent an available range in future. In either case, capacities are allocated at a subnational resolution based on linear scaling from current capacity geolocations, using the JRC power plant database (#78).
 
 ### Added (workflow)
 
+* **ADD** Ruff as our default linter and formatter (#285).
+* **ADD** DAG rule that generates a visualisation of Snakemake's directed acyclic graph (#208).
 * **ADD** IPython debugger to all conda environments to ease debugging (#254).
 * **ADD** a default Snakemake profile to run on local machines in addition to the existing profile for Euler (#211).
 * **ADD** a Snakemake profile to run using conda instead of mamba (#211).
@@ -49,6 +52,10 @@
 ### Fixed (documentation)
 
 * **FIX** links in the documention to always point to the most recent version of the pre-builts (#218).
+
+### Fixed (workflow)
+
+* **FIX** fixed optimisation tolerance of hydro power plants from xtol to xatol (#266).
 
 ## 1.1.0 (2021-12-22)
 
